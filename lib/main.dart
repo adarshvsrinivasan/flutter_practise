@@ -1,8 +1,7 @@
+import 'package:expense/widgets/user_transactions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense/widgets/daily_expense_chart.dart';
-import 'package:expense/widgets/new_transaction.dart';
-import 'package:expense/widgets/transaction_list.dart';
 
 void main() => runApp(MyHomePage());
 
@@ -21,13 +20,14 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            DailyExpenseChart(),
-            TransactionList(),
-            UserTransaction(),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              DailyExpenseChart(),
+              UserTransactions(),
+            ],
+          ),
         ),
       ),
     );
