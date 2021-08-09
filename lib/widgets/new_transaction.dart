@@ -1,14 +1,30 @@
 import 'package:expense/models/transaction.dart';
-import 'package:expense/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+class NewTransaction extends StatefulWidget {
   final Function addFn;
   final int transactionCount;
 
   NewTransaction(this.addFn, this.transactionCount);
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitData(Transaction tx) {
+    if (tx.amount.isNegative || tx.title.isEmpty) {
+      return;
+    }
+
+    widget.addFn(tx);
+
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +51,19 @@ class NewTransaction extends StatelessWidget {
                         labelText: 'Amount',
                       ),
                       controller: amountController,
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
                         final newTx = Transaction.name(
-                          transactionCount+1,
+                          widget.transactionCount + 1,
                           titleController.text,
                           double.parse(amountController.text),
                           DateTime.now(),
                         );
-                        addFn(newTx);
+                        submitData(newTx);
                       },
                       child: Text(
                         'Submit',
