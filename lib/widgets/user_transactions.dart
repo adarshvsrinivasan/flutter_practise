@@ -11,8 +11,7 @@ class UserTransactions extends StatefulWidget {
 }
 
 class _UserTransactionsState extends State<UserTransactions> {
-  List<Transaction> _userTransactions = [
-  ];
+  List<Transaction> _userTransactions = [];
 
   void _addNewTransaction(Transaction newTx) {
     final newTransaction = newTx;
