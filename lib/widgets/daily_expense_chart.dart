@@ -13,17 +13,14 @@ class _DailyExpenseChartState extends State<DailyExpenseChart> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
       child: Card(
-        color: Colors.cyanAccent,
+        color: Theme.of(context).accentColor,
         child: Container(
           width: double.infinity,
           height: 200,
           child: Center(
             child: Text(
               'Chart PlaceHolder',
-              style: TextStyle(
-                fontSize: 20,
-                letterSpacing: 5,
-              ),
+              style: Theme.of(context).textTheme.title,
             ),
           ),
         ),

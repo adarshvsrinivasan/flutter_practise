@@ -31,9 +31,9 @@ class _NewTransactionState extends State<NewTransaction> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
           child: Card(
-            color: Colors.cyanAccent,
+            color: Theme.of(context).primaryColorLight,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
               child: Container(
