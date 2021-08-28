@@ -1,5 +1,6 @@
 import 'package:expense/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addFn;
@@ -13,8 +14,8 @@ class NewTransaction extends StatefulWidget {
 
 class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
-
   final amountController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   void submitData(Transaction tx) {
     if (tx.amount.isNegative || tx.title.isEmpty) {
@@ -24,6 +25,26 @@ class _NewTransactionState extends State<NewTransaction> {
     widget.addFn(tx);
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+    ).then(
+      (pickedDate) {
+        if (pickedDate == null) {
+          return;
+        }
+        setState(
+          () {
+            selectedDate = pickedDate;
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -55,21 +76,42 @@ class _NewTransactionState extends State<NewTransaction> {
                         decimal: true,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        final newTx = Transaction.name(
-                          widget.transactionCount + 1,
-                          titleController.text,
-                          double.parse(amountController.text),
-                          DateTime.now(),
-                        );
-                        submitData(newTx);
-                      },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(
-                          color: Colors.grey[800],
-                        ),
+                    Container(
+                      height: 60,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              TextButton(
+                                onPressed: _presentDatePicker,
+                                child: Text("Select Date"),
+                              ),
+                              Text(
+                                DateFormat.yMMMd()
+                                    .format(selectedDate)
+                                    .toString(),
+                              ),
+                            ],
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              final newTx = Transaction.name(
+                                widget.transactionCount + 1,
+                                titleController.text,
+                                double.parse(amountController.text),
+                                selectedDate,
+                              );
+                              submitData(newTx);
+                            },
+                            child: Text(
+                              'Submit',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
