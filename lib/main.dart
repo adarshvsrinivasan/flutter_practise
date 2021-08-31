@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expense/widgets/daily_expense_chart.dart';
 import 'package:expense/widgets/new_transaction.dart';
 import 'package:expense/widgets/transaction_list.dart';
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
@@ -100,30 +103,52 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     final mediaQuery = MediaQuery.of(context);
-    final isLandscape =
-        mediaQuery.orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final appBar = AppBar(
-      backgroundColor: Theme.of(context).primaryColor,
-      title: Text(
-        'My Personal Expenses',
-      ),
-      actions: [
-        Builder(
-          builder: (context) => IconButton(
-            onPressed: () {
-              _startNewTransaction(context);
-            },
-            icon: Icon(
-              Icons.add,
-              color: Colors.grey[200],
+    final dynamic appBar = Platform.isAndroid
+        ? AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text(
+              'My Personal Expenses',
             ),
-          ),
-        ),
-      ],
-    );
+            actions: [
+              Builder(
+                builder: (context) => IconButton(
+                  onPressed: () {
+                    _startNewTransaction(context);
+                  },
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.grey[200],
+                  ),
+                ),
+              ),
+            ],
+          )
+        : CupertinoNavigationBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            middle: Text(
+              "My Personal Expenses",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(
+                    CupertinoIcons.add,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    _startNewTransaction(context);
+                  },
+                )
+              ],
+            ),
+          );
 
     var txWidgetList = Container(
       height: (mediaQuery.size.height -
@@ -133,9 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -163,15 +187,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-            /*_showChart
-                  ? Container(
-                      height: (mediaQuery.size.height -
-                              mediaQuery.padding.top -
-                              appBar.preferredSize.height) *
-                          0.7,
-                      child: DailyExpenseChart(_recentTransactions),
-                    )
-                  : txWidgetList,*/
             if (!isLandscape)
               Container(
                 height: (mediaQuery.size.height -
@@ -184,14 +199,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            _startNewTransaction(context);
-          },
-        ),
-      ),
     );
+
+    return Platform.isAndroid
+        ? Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButton: !Platform.isIOS
+                ? Builder(
+                    builder: (context) => FloatingActionButton(
+                      child: Icon(Icons.add),
+                      onPressed: () {
+                        _startNewTransaction(context);
+                      },
+                    ),
+                  )
+                : null,
+          )
+        : CupertinoPageScaffold(
+            navigationBar: appBar,
+            child: pageBody,
+          );
   }
 }

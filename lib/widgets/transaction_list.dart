@@ -46,7 +46,7 @@ class TransactionList extends StatelessWidget {
                           transactions[index].title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontFamily: "OpenSans",
+                            //fontFamily: "OpenSans",
                             fontSize: 20,
                           ),
                         ),
@@ -75,7 +75,7 @@ class TransactionList extends StatelessWidget {
                         'No Transactions Yet!',
                         style: TextStyle(
                           fontSize: 22,
-                          fontFamily: "OpenSans",
+                          //fontFamily: "OpenSans",
                           fontWeight: FontWeight.normal,
                           color: Theme.of(context).primaryColorDark,
                         ),
